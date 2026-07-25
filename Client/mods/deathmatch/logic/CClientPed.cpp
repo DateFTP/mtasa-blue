@@ -5413,7 +5413,7 @@ void CClientPed::Say(const ePedSpeechContext& speechId, float probability)
 
 const char* CClientPed::GetBodyPartName(unsigned char ucID)
 {
-    if (ucID <= 10)
+    if (ucID < 10)
     {
         return BodyPartNames[ucID].szName;
     }
@@ -5842,11 +5842,11 @@ bool CClientPed::IsRunningAnimation()
     {
         CTask* pTask = m_pTaskManager->GetTask(TASK_PRIORITY_PRIMARY);
         if (pTask && pTask->GetTaskType() == TASK_SIMPLE_NAMED_ANIM)
-        {
             return true;
-        }
-        return false;
     }
+
+    // Short-lived partial anims end TASK_SIMPLE_NAMED_ANIM while loop/freezeLastFrame
+    // keeps the pose; fall back to cache (same as streamed-out peds).
     return (m_AnimationCache.bLoop || m_AnimationCache.bFreezeLastFrame) && m_pAnimationBlock;
 }
 
